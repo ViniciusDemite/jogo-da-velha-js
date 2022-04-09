@@ -42,20 +42,32 @@ function verifyWinner() {
 		[6, 4, 2], // Diagonal 2
 	];
 
-	validCombination = verifyCombinationLineHorizontal(
+	validCombination = verifyCombinationHorizontal(
 		game.matrix,
 		game.currentPlayer
 	);
 
+	/* if (!validCombination) {
+		validCombination = verifyCombinationVertical(
+			game.matrix,
+			game.currentPlayer
+		);
+	} */
+
 	console.log(validCombination);
 }
 
-function verifyCombinationLineHorizontal(matrix, player) {
+function verifyCombinationHorizontal(matrix, player) {
 	let line = 0;
 	let column = 0;
 	let validCombination = true;
 
 	do {
+		console.log(
+			`Verificando linha (${line}) na coluna (${column}). Valor: `,
+			matrix[line][column]
+		);
+
 		if (matrix[line][column] !== player.letter) {
 			validCombination = false;
 			line++;
@@ -68,9 +80,29 @@ function verifyCombinationLineHorizontal(matrix, player) {
 	return validCombination;
 }
 
-function verifyCombinationLineVertical() {}
+function verifyCombinationVertical(matrix, player) {
+	let line = 0;
+	let column = 0;
+	let validCombination = true;
 
-function verifyCombinationLineDiagonal() {}
+	do {
+		console.log(
+			`Verificando linha (${line}) na coluna (${column}). Valor: `,
+			matrix[line][column]
+		);
+
+		if (matrix[line][column] !== player.letter) {
+			validCombination = false;
+			column = 0;
+		}
+
+		line++;
+	} while (line <= 2 && column <= 2);
+
+	return validCombination;
+}
+
+function verifyCombinationDiagonal() {}
 
 game.init();
 
