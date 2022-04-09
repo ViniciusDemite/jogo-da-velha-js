@@ -6,6 +6,7 @@ export default class Player {
 			score: scoreElement,
 			scoreNumber: scoreNumber,
 		};
+		this._selectedSquares = [];
 	}
 
 	get letter() {
@@ -26,5 +27,13 @@ export default class Player {
 
 	get elements() {
 		return this._elements;
+	}
+
+	get selectedSquares() {
+		return this._selectedSquares;
+	}
+
+	set selectedSquares(selectedSquares) {
+		this._selectedSquares.push(selectedSquares);
 	}
 }

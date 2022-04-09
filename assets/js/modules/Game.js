@@ -7,6 +7,11 @@ export default class Game {
 		this._elements = {
 			activePlayer: document.getElementById("player"),
 		};
+		this._matrix = [
+			[0, 0, 0],
+			[0, 0, 0],
+			[0, 0, 0],
+		];
 		this._finished = false;
 	}
 
@@ -42,6 +47,14 @@ export default class Game {
 		this.finished = finished;
 	}
 
+	get matrix() {
+		return this._matrix;
+	}
+
+	set matrix(matrix) {
+		this._matrix = matrix;
+	}
+
 	init() {
 		for (let i = 0; i < 9; i++) {
 			this.content.insertAdjacentElement(
@@ -57,6 +70,13 @@ export default class Game {
 		const square = document.createElement("div");
 		square.classList.add("content__square", "col-4");
 		square.id = id;
+		square.dataset.line = id <= 2 ? 0 : id <= 5 && id > 2 ? 1 : 2;
+		square.dataset.column =
+			id === 0 || id % 3 === 0
+				? 0
+				: id === 4 || id === 1 || id === 7
+				? 1
+				: 2;
 
 		return square;
 	}

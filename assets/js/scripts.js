@@ -10,14 +10,9 @@ const playerO = new Player("O", {
 	scoreNumber: document.getElementById("player-o-score"),
 });
 
-console.log("Player X: ", playerX);
-console.log("Player Y: ", playerO);
-
 const game = new Game(playerX);
 
-console.log("Objeto do jogo: ", game);
-
-function changeLayout() {
+function change() {
 	game.currentPlayer.elements.score.classList.remove("player-active");
 
 	changePlayer();
@@ -34,6 +29,49 @@ function changePlayer() {
 	}
 }
 
+function verifyWinner() {
+	let validCombination;
+	const combinations = [
+		[0, 1, 2], // Linha horizontal 1
+		[3, 4, 5], // Linha horizontal 2
+		[6, 7, 8], // Linha horizontal 3
+		[0, 3, 6], // Linha vertical 1
+		[1, 4, 7], // Linha vertical 2
+		[2, 5, 8], // Linha vertical 3
+		[0, 4, 8], // Diagonal 1
+		[6, 4, 2], // Diagonal 2
+	];
+
+	validCombination = verifyCombinationLineHorizontal(
+		game.matrix,
+		game.currentPlayer
+	);
+
+	console.log(validCombination);
+}
+
+function verifyCombinationLineHorizontal(matrix, player) {
+	let line = 0;
+	let column = 0;
+	let validCombination = true;
+
+	do {
+		if (matrix[line][column] !== player.letter) {
+			validCombination = false;
+			line++;
+			column = 0;
+		}
+
+		column++;
+	} while (line <= 2 && column <= 2);
+
+	return validCombination;
+}
+
+function verifyCombinationLineVertical() {}
+
+function verifyCombinationLineDiagonal() {}
+
 game.init();
 
 game.squares.forEach((square) => {
@@ -41,8 +79,13 @@ game.squares.forEach((square) => {
 		if (game.blockedSquares.includes(this.id)) return;
 
 		this.innerText = game.currentPlayer.letter;
-
-		changeLayout();
 		game.blockedSquares = this.id;
+		game.matrix[this.dataset.line][this.dataset.column] =
+			game.currentPlayer.letter;
+		game.currentPlayer.selectedSquares = this.id;
+
+		verifyWinner();
+
+		change();
 	});
 });
