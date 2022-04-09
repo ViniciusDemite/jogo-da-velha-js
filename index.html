@@ -21,22 +21,22 @@
         <div class="content container mb-5" id="game-content">
             <div class="row my-5">
                 <div class="col-6 d-flex align-items-center justify-content-center">
-                    <div class="player">
+                    <div class="player player-active" id="player-x">
                         X
                         <span class="player__score" id="player-x-score">0</span>
                     </div>
                 </div>
                 <div class="col-6 d-flex align-items-center justify-content-center">
-                    <div class="player">
+                    <div class="player" id="player-o">
                         O
                         <span class="player__score" id="player-o-score">0</span>
                     </div>
                 </div>
 
                 <div class="col-12 mt-3">
-                    <p class="ties text-center mb-0">
-                        Empates:
-                        <span id="ties">0</span>
+                    <p class="current-player text-center mb-0">
+                        Jogador:
+                        <strong id="player">X</strong>
                     </p>
                 </div>
             </div>

@@ -1,8 +1,11 @@
 export default class Player {
-	constructor(letter, scoreElement, score = 0) {
+	constructor(letter, { scoreElement, scoreNumber }, score = 0) {
 		this._letter = letter;
 		this._score = score;
-		this.scoreElement = scoreElement;
+		this._elements = {
+			score: scoreElement,
+			scoreNumber: scoreNumber,
+		};
 	}
 
 	get letter() {
@@ -19,5 +22,9 @@ export default class Player {
 
 	set score(score) {
 		this._score = score;
+	}
+
+	get elements() {
+		return this._elements;
 	}
 }

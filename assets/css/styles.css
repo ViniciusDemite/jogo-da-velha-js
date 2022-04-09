@@ -58,6 +58,12 @@ body {
     font-weight: 700;
 }
 
+.player-active {
+    border: 2px solid #000;
+    background-color: #e4e4e4;
+    transition: all .5s ease-in-out;
+}
+
 .player__score {
     margin-left: auto;
     font-size: 1.125rem;
