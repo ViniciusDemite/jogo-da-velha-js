@@ -34,6 +34,6 @@ export default class Player {
 	}
 
 	set selectedSquares(selectedSquares) {
-		this._selectedSquares.push(selectedSquares);
+		this._selectedSquares = selectedSquares;
 	}
 }

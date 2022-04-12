@@ -12,7 +12,6 @@ export default class Game {
 			[0, 0, 0],
 			[0, 0, 0],
 		];
-		this._finished = false;
 	}
 
 	get squares() {
@@ -23,8 +22,8 @@ export default class Game {
 		return this._blockedSquares;
 	}
 
-	set blockedSquares(id) {
-		this._blockedSquares.push(id);
+	set blockedSquares(blockedSquares) {
+		this._blockedSquares = blockedSquares;
 	}
 
 	get currentPlayer() {
@@ -37,14 +36,6 @@ export default class Game {
 
 	get elements() {
 		return this._elements;
-	}
-
-	get finished() {
-		return this._finished;
-	}
-
-	set finished(finished) {
-		this.finished = finished;
 	}
 
 	get matrix() {

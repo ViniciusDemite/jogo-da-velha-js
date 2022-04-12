@@ -29,10 +29,44 @@ function changePlayer() {
 	}
 }
 
-function verifyWinner() {
+function gameHasAWinner() {
 	if (!verifyValidCombination()) return;
 
-	game.currentPlayer.score += game.currentPlayer.score;
+	alert(`Jogador ${game.currentPlayer.letter} ganhou!!`);
+
+	// Sum score
+	game.currentPlayer.score += 1;
+	game.currentPlayer.elements.scoreNumber.innerText =
+		game.currentPlayer.score;
+
+	/* setTimeout(() => {
+		resetGame(false);
+	}, 1000); */
+
+	return true;
+}
+
+function resetGame(resetScore = true) {
+	game.blockedSquares.forEach((id) => {
+		const square = document.getElementById(id);
+		square.innerText = "";
+	});
+
+	game.matrix = [
+		[0, 0, 0],
+		[0, 0, 0],
+		[0, 0, 0],
+	];
+	game.blockedSquares = [];
+	game.currentPlayer = playerX;
+
+	playerX.selectedSquares = [];
+	playerO.selectedSquares = [];
+
+	if (resetScore) {
+		playerX.score = 0;
+		player0.score = 0;
+	}
 }
 
 function verifyValidCombination() {
@@ -63,8 +97,6 @@ function verifyValidCombination() {
 			c
 		);
 	}
-
-	console.log("Verificando combinações: ", validCombination);
 
 	return validCombination;
 }
@@ -107,14 +139,16 @@ game.squares.forEach((square) => {
 	square.addEventListener("click", function () {
 		const id = parseInt(this.id);
 
+		console.log(game.blockedSquares);
+
 		if (game.blockedSquares.includes(id)) return;
 
 		this.innerText = game.currentPlayer.letter;
-		game.blockedSquares = id;
-		game.currentPlayer.selectedSquares = id;
+		game.blockedSquares.push(id);
+		game.currentPlayer.selectedSquares.push(id);
 		game.matrix[this.dataset.line][this.dataset.column] = id;
 
-		verifyWinner();
+		if (gameHasAWinner()) return;
 
 		change();
 	});
