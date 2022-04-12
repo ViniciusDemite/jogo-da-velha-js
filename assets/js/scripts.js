@@ -30,23 +30,18 @@ function changePlayer() {
 }
 
 function verifyWinner() {
-	let validCombination = false;
-	const combinations = [
-		[0, 1, 2], // Linha horizontal 1
-		[3, 4, 5], // Linha horizontal 2
-		[6, 7, 8], // Linha horizontal 3
-		[0, 3, 6], // Linha vertical 1
-		[1, 4, 7], // Linha vertical 2
-		[2, 5, 8], // Linha vertical 3
-		[0, 4, 8], // Diagonal 1
-		[6, 4, 2], // Diagonal 2
-	];
+	if (!verifyValidCombination()) return;
 
-	// console.log("Verificando diagonais");
-	/* validCombination = verifyCombinationDiagonal(
+	game.currentPlayer.score += game.currentPlayer.score;
+}
+
+function verifyValidCombination() {
+	let validCombination = false;
+
+	validCombination = verifyCombinationDiagonal(
 		game.matrix,
-		game.currentPlayer.letter
-	); */
+		game.currentPlayer.selectedSquares
+	);
 
 	for (let l = 0; l < game.matrix.length; l++) {
 		const line = game.matrix[l];
@@ -55,8 +50,7 @@ function verifyWinner() {
 
 		validCombination = verifyCombinationHorizontal(
 			line,
-			game.currentPlayer.selectedSquares,
-			0
+			game.currentPlayer.selectedSquares
 		);
 	}
 
@@ -70,10 +64,14 @@ function verifyWinner() {
 		);
 	}
 
-	console.log(validCombination);
+	console.log("Verificando combinações: ", validCombination);
+
+	return validCombination;
 }
 
-function verifyCombinationHorizontal(line, playerSelectedSquares, column) {
+function verifyCombinationHorizontal(line, playerSelectedSquares) {
+	const column = 0;
+
 	return (
 		playerSelectedSquares.includes(line[column]) &&
 		playerSelectedSquares.includes(line[column + 1]) &&
@@ -91,16 +89,15 @@ function verifyCombinationVertical(matrix, playerSelectedSquares, column) {
 	);
 }
 
-function verifyCombinationDiagonal(matrix, letter) {
-	const middleLine = 2;
-	const middleColumn = 1;
+function verifyCombinationDiagonal(matrix, playerSelectedSquares) {
+	const middle = 1;
 
 	return (
-		(matrix[middleLine - 1][middleColumn - 1].letter === letter ||
-			matrix[middleLine - 1][middleColumn + 1].letter === letter) &&
-		matrix[middleLine][middleColumn].letter === letter &&
-		(matrix[middleLine + 1][middleColumn - 1].letter === letter ||
-			matrix[middleLine + 1][middleColumn + 1].letter === letter)
+		(playerSelectedSquares.includes(matrix[middle - 1][middle - 1]) ||
+			playerSelectedSquares.includes(matrix[middle - 1][middle + 1])) &&
+		playerSelectedSquares.includes(matrix[middle][middle]) &&
+		(playerSelectedSquares.includes(matrix[middle + 1][middle - 1]) ||
+			playerSelectedSquares.includes(matrix[middle + 1][middle + 1]))
 	);
 }
 
@@ -116,11 +113,6 @@ game.squares.forEach((square) => {
 		game.blockedSquares = id;
 		game.currentPlayer.selectedSquares = id;
 		game.matrix[this.dataset.line][this.dataset.column] = id;
-
-		console.log(
-			`Quadrados selecionados pelo jogador (${game.currentPlayer.letter}): `,
-			game.currentPlayer.selectedSquares
-		);
 
 		verifyWinner();
 

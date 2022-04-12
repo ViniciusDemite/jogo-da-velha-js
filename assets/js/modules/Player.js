@@ -1,7 +1,7 @@
 export default class Player {
-	constructor(letter, { scoreElement, scoreNumber }, score = 0) {
+	constructor(letter, { scoreElement, scoreNumber }) {
 		this._letter = letter;
-		this._score = score;
+		this._score = 0;
 		this._elements = {
 			score: scoreElement,
 			scoreNumber: scoreNumber,
