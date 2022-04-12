@@ -31,7 +31,6 @@ function changePlayer() {
 
 function verifyWinner() {
 	let validCombination = false;
-	let column = 0;
 	const combinations = [
 		[0, 1, 2], // Linha horizontal 1
 		[3, 4, 5], // Linha horizontal 2
@@ -42,8 +41,6 @@ function verifyWinner() {
 		[0, 4, 8], // Diagonal 1
 		[6, 4, 2], // Diagonal 2
 	];
-
-	// console.log("Game matrix: ", game.matrix);
 
 	// console.log("Verificando diagonais");
 	/* validCombination = verifyCombinationDiagonal(
@@ -61,35 +58,36 @@ function verifyWinner() {
 			game.currentPlayer.selectedSquares,
 			0
 		);
+	}
 
-		/* if (!validCombination) {
-			// console.log("Verificando linha na vertical: ", line);
-			validCombination = verifyCombinationVertical(
-				line,
-				game.currentPlayer.letter,
-				column
-			);
-		} */
+	for (let c = 0; c < 3; c++) {
+		if (validCombination) break;
 
-		column++;
+		validCombination = verifyCombinationVertical(
+			game.matrix,
+			game.currentPlayer.selectedSquares,
+			c
+		);
 	}
 
 	console.log(validCombination);
 }
 
-function verifyCombinationHorizontal(line, playerSelected, column) {
+function verifyCombinationHorizontal(line, playerSelectedSquares, column) {
 	return (
-		playerSelected.includes(line[column]) &&
-		playerSelected.includes(line[column + 1]) &&
-		playerSelected.includes(line[column + 2])
+		playerSelectedSquares.includes(line[column]) &&
+		playerSelectedSquares.includes(line[column + 1]) &&
+		playerSelectedSquares.includes(line[column + 2])
 	);
 }
 
-function verifyCombinationVertical(array, letter, column) {
+function verifyCombinationVertical(matrix, playerSelectedSquares, column) {
+	const line = 0;
+
 	return (
-		array[column].letter === letter &&
-		array[column].letter === letter &&
-		array[column].letter === letter
+		playerSelectedSquares.includes(matrix[line][column]) &&
+		playerSelectedSquares.includes(matrix[line + 1][column]) &&
+		playerSelectedSquares.includes(matrix[line + 2][column])
 	);
 }
 
@@ -110,12 +108,14 @@ game.init();
 
 game.squares.forEach((square) => {
 	square.addEventListener("click", function () {
-		if (game.blockedSquares.includes(this.id)) return;
+		const id = parseInt(this.id);
+
+		if (game.blockedSquares.includes(id)) return;
 
 		this.innerText = game.currentPlayer.letter;
-		game.blockedSquares = this.id;
-		game.currentPlayer.selectedSquares = this.id;
-		game.matrix[this.dataset.line][this.dataset.column] = this.id;
+		game.blockedSquares = id;
+		game.currentPlayer.selectedSquares = id;
+		game.matrix[this.dataset.line][this.dataset.column] = id;
 
 		console.log(
 			`Quadrados selecionados pelo jogador (${game.currentPlayer.letter}): `,
