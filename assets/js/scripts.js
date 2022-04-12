@@ -30,7 +30,8 @@ function changePlayer() {
 }
 
 function verifyWinner() {
-	let validCombination;
+	let validCombination = false;
+	let column = 0;
 	const combinations = [
 		[0, 1, 2], // Linha horizontal 1
 		[3, 4, 5], // Linha horizontal 2
@@ -42,67 +43,68 @@ function verifyWinner() {
 		[6, 4, 2], // Diagonal 2
 	];
 
-	validCombination = verifyCombinationHorizontal(
-		game.matrix,
-		game.currentPlayer
-	);
+	// console.log("Game matrix: ", game.matrix);
 
-	/* if (!validCombination) {
-		validCombination = verifyCombinationVertical(
-			game.matrix,
-			game.currentPlayer
+	// console.log("Verificando diagonais");
+	/* validCombination = verifyCombinationDiagonal(
+		game.matrix,
+		game.currentPlayer.letter
+	); */
+
+	for (let l = 0; l < game.matrix.length; l++) {
+		const line = game.matrix[l];
+
+		if (validCombination) break;
+
+		validCombination = verifyCombinationHorizontal(
+			line,
+			game.currentPlayer.selectedSquares,
+			0
 		);
-	} */
+
+		/* if (!validCombination) {
+			// console.log("Verificando linha na vertical: ", line);
+			validCombination = verifyCombinationVertical(
+				line,
+				game.currentPlayer.letter,
+				column
+			);
+		} */
+
+		column++;
+	}
 
 	console.log(validCombination);
 }
 
-function verifyCombinationHorizontal(matrix, player) {
-	let line = 0;
-	let column = 0;
-	let validCombination = true;
-
-	do {
-		console.log(
-			`Verificando linha (${line}) na coluna (${column}). Valor: `,
-			matrix[line][column]
-		);
-
-		if (matrix[line][column] !== player.letter) {
-			validCombination = false;
-			line++;
-			column = 0;
-		}
-
-		column++;
-	} while (line <= 2 && column <= 2);
-
-	return validCombination;
+function verifyCombinationHorizontal(line, playerSelected, column) {
+	return (
+		playerSelected.includes(line[column]) &&
+		playerSelected.includes(line[column + 1]) &&
+		playerSelected.includes(line[column + 2])
+	);
 }
 
-function verifyCombinationVertical(matrix, player) {
-	let line = 0;
-	let column = 0;
-	let validCombination = true;
-
-	do {
-		console.log(
-			`Verificando linha (${line}) na coluna (${column}). Valor: `,
-			matrix[line][column]
-		);
-
-		if (matrix[line][column] !== player.letter) {
-			validCombination = false;
-			column = 0;
-		}
-
-		line++;
-	} while (line <= 2 && column <= 2);
-
-	return validCombination;
+function verifyCombinationVertical(array, letter, column) {
+	return (
+		array[column].letter === letter &&
+		array[column].letter === letter &&
+		array[column].letter === letter
+	);
 }
 
-function verifyCombinationDiagonal() {}
+function verifyCombinationDiagonal(matrix, letter) {
+	const middleLine = 2;
+	const middleColumn = 1;
+
+	return (
+		(matrix[middleLine - 1][middleColumn - 1].letter === letter ||
+			matrix[middleLine - 1][middleColumn + 1].letter === letter) &&
+		matrix[middleLine][middleColumn].letter === letter &&
+		(matrix[middleLine + 1][middleColumn - 1].letter === letter ||
+			matrix[middleLine + 1][middleColumn + 1].letter === letter)
+	);
+}
 
 game.init();
 
@@ -112,9 +114,13 @@ game.squares.forEach((square) => {
 
 		this.innerText = game.currentPlayer.letter;
 		game.blockedSquares = this.id;
-		game.matrix[this.dataset.line][this.dataset.column] =
-			game.currentPlayer.letter;
 		game.currentPlayer.selectedSquares = this.id;
+		game.matrix[this.dataset.line][this.dataset.column] = this.id;
+
+		console.log(
+			`Quadrados selecionados pelo jogador (${game.currentPlayer.letter}): `,
+			game.currentPlayer.selectedSquares
+		);
 
 		verifyWinner();
 
