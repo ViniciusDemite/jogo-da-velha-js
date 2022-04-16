@@ -30,8 +30,10 @@ function changePlayer() {
 }
 
 function gameHasAWinner() {
+	// TODO implementar mensagem para quando der velha
 	if (!verifyValidCombination()) return;
 
+	// TODO realçar quadrados da combinação vencedora
 	alert(`Jogador ${game.currentPlayer.letter} ganhou!!`);
 
 	// Sum score
@@ -76,7 +78,6 @@ function verifyValidCombination() {
 		game.matrix,
 		game.currentPlayer.selectedSquares
 	);
-	console.log("=================");
 
 	for (let l = 0; l < game.matrix.length; l++) {
 		const line = game.matrix[l];
@@ -88,7 +89,6 @@ function verifyValidCombination() {
 			game.currentPlayer.selectedSquares
 		);
 	}
-	console.log("=================");
 
 	for (let c = 0; c < 3; c++) {
 		if (validCombination) break;
@@ -99,17 +99,12 @@ function verifyValidCombination() {
 			c
 		);
 	}
-	console.log("=================");
-
-	console.log({ validCombination });
 
 	return validCombination;
 }
 
 function verifyCombinationHorizontal(line, playerSelectedSquares) {
 	const column = 0;
-	console.log(`Verificando linha horizontal na coluna ${column}`);
-	console.table(line);
 
 	return (
 		playerSelectedSquares.includes(line[column]) &&
@@ -120,8 +115,6 @@ function verifyCombinationHorizontal(line, playerSelectedSquares) {
 
 function verifyCombinationVertical(matrix, playerSelectedSquares, column) {
 	const line = 0;
-	console.log(`Verificando linhas na vertical na coluna ${column}`);
-	console.table(matrix);
 
 	return (
 		playerSelectedSquares.includes(matrix[line][column]) &&
@@ -132,8 +125,6 @@ function verifyCombinationVertical(matrix, playerSelectedSquares, column) {
 
 function verifyCombinationDiagonal(matrix, playerSelectedSquares) {
 	const middle = 1;
-	console.log(`Verificando diagonal da matrix sendo o meio ${middle}`);
-	console.table(matrix);
 
 	return (
 		(playerSelectedSquares.includes(matrix[middle - 1][middle - 1]) ||
@@ -149,10 +140,6 @@ game.init();
 game.squares.forEach((square) => {
 	square.addEventListener("click", function () {
 		const id = parseInt(this.id);
-		console.info(`Jogador ${game.currentPlayer.letter}`);
-
-		console.log("Quadrados bloqueados");
-		console.table(game.blockedSquares);
 
 		if (game.blockedSquares.includes(id)) return;
 
@@ -160,9 +147,6 @@ game.squares.forEach((square) => {
 		game.blockedSquares.push(id);
 		game.currentPlayer.selectedSquares.push(id);
 		game.matrix[this.dataset.line][this.dataset.column] = id;
-
-		console.log("Quadrados selecionados pelo jogador");
-		console.table(game.currentPlayer.selectedSquares);
 
 		if (gameHasAWinner()) return;
 
