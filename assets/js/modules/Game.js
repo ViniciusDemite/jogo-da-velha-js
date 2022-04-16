@@ -8,9 +8,9 @@ export default class Game {
 			activePlayer: document.getElementById("player"),
 		};
 		this._matrix = [
-			[0, 0, 0],
-			[0, 0, 0],
-			[0, 0, 0],
+			[null, null, null],
+			[null, null, null],
+			[null, null, null],
 		];
 	}
 
