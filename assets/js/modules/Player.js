@@ -36,4 +36,16 @@ export default class Player {
 	set selectedSquares(selectedSquares) {
 		this._selectedSquares = selectedSquares;
 	}
+
+	reset(resetScore = true) {
+		this._selectedSquares = [];
+
+		if (resetScore) {
+			this._score = 0;
+		}
+	}
+
+	toggleActivePlayer() {
+		this._elements.score.classList.toggle("player-active");
+	}
 }

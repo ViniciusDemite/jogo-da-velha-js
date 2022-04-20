@@ -57,6 +57,26 @@ export default class Game {
 		this._squares = document.querySelectorAll(".content__square");
 	}
 
+	reset(player) {
+		this._currentPlayer.toggleActivePlayer();
+
+		this._blockedSquares.forEach((id) => {
+			const square = document.getElementById(id);
+			square.innerText = "";
+		});
+
+		this._matrix = [
+			[0, 0, 0],
+			[0, 0, 0],
+			[0, 0, 0],
+		];
+		this._blockedSquares = [];
+		this._currentPlayer = player;
+
+		this._currentPlayer.toggleActivePlayer();
+		this.toggleActivePlayerLetter();
+	}
+
 	createSquare(id) {
 		const square = document.createElement("div");
 		square.classList.add("content__square", "col-4");
@@ -70,5 +90,81 @@ export default class Game {
 				: 2;
 
 		return square;
+	}
+
+	verifyValidCombination() {
+		let validCombination = false;
+
+		validCombination = this.verifyCombinationDiagonal(
+			this._matrix,
+			this._currentPlayer.selectedSquares
+		);
+
+		for (let l = 0; l < this._matrix.length; l++) {
+			const line = this._matrix[l];
+
+			if (validCombination) break;
+
+			validCombination = this.verifyCombinationHorizontal(
+				line,
+				this._currentPlayer.selectedSquares
+			);
+		}
+
+		for (let c = 0; c < this._matrix[0].length; c++) {
+			if (validCombination) break;
+
+			validCombination = this.verifyCombinationVertical(
+				this._matrix,
+				this._currentPlayer.selectedSquares,
+				c
+			);
+		}
+
+		return validCombination;
+	}
+
+	verifyCombinationDiagonal(matrix, playerSelectedSquares) {
+		const middle = 1;
+
+		return (
+			(playerSelectedSquares.includes(matrix[middle - 1][middle - 1]) ||
+				playerSelectedSquares.includes(
+					matrix[middle - 1][middle + 1]
+				)) &&
+			playerSelectedSquares.includes(matrix[middle][middle]) &&
+			(playerSelectedSquares.includes(matrix[middle + 1][middle - 1]) ||
+				playerSelectedSquares.includes(matrix[middle + 1][middle + 1]))
+		);
+	}
+
+	verifyCombinationHorizontal(line, playerSelectedSquares) {
+		const column = 0;
+
+		return (
+			playerSelectedSquares.includes(line[column]) &&
+			playerSelectedSquares.includes(line[column + 1]) &&
+			playerSelectedSquares.includes(line[column + 2])
+		);
+	}
+
+	verifyCombinationVertical(matrix, playerSelectedSquares, column) {
+		const line = 0;
+
+		return (
+			playerSelectedSquares.includes(matrix[line][column]) &&
+			playerSelectedSquares.includes(matrix[line + 1][column]) &&
+			playerSelectedSquares.includes(matrix[line + 2][column])
+		);
+	}
+
+	adjustScore() {
+		this._currentPlayer.score += 1;
+		this._currentPlayer.elements.scoreNumber.innerText =
+			this._currentPlayer.score;
+	}
+
+	toggleActivePlayerLetter() {
+		this._elements.activePlayer.innerText = this._currentPlayer.letter;
 	}
 }

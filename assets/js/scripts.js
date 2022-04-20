@@ -13,12 +13,12 @@ const playerO = new Player("O", {
 const game = new Game(playerX);
 
 function change() {
-	game.currentPlayer.elements.score.classList.remove("player-active");
+	game.currentPlayer.toggleActivePlayer();
 
 	changePlayer();
 
-	game.currentPlayer.elements.score.classList.add("player-active");
-	game.elements.activePlayer.innerText = game.currentPlayer.letter;
+	game.currentPlayer.toggleActivePlayer();
+	game.toggleActivePlayerLetter();
 }
 
 function changePlayer() {
@@ -31,108 +31,23 @@ function changePlayer() {
 
 function gameHasAWinner() {
 	// TODO implementar mensagem para quando der velha
-	if (!verifyValidCombination()) return;
+	if (!game.verifyValidCombination()) return;
 
 	// TODO realçar quadrados da combinação vencedora
 	alert(`Jogador ${game.currentPlayer.letter} ganhou!!`);
 
 	// Sum score
-	game.currentPlayer.score += 1;
-	game.currentPlayer.elements.scoreNumber.innerText =
-		game.currentPlayer.score;
+	game.adjustScore();
 
-	/* setTimeout(() => {
-		resetGame(false);
-	}, 1000); */
+	resetGame(false);
 
 	return true;
 }
 
 function resetGame(resetScore = true) {
-	game.blockedSquares.forEach((id) => {
-		const square = document.getElementById(id);
-		square.innerText = "";
-	});
-
-	game.matrix = [
-		[0, 0, 0],
-		[0, 0, 0],
-		[0, 0, 0],
-	];
-	game.blockedSquares = [];
-	game.currentPlayer = playerX;
-
-	playerX.selectedSquares = [];
-	playerO.selectedSquares = [];
-
-	if (resetScore) {
-		playerX.score = 0;
-		player0.score = 0;
-	}
-}
-
-function verifyValidCombination() {
-	let validCombination = false;
-
-	validCombination = verifyCombinationDiagonal(
-		game.matrix,
-		game.currentPlayer.selectedSquares
-	);
-
-	for (let l = 0; l < game.matrix.length; l++) {
-		const line = game.matrix[l];
-
-		if (validCombination) break;
-
-		validCombination = verifyCombinationHorizontal(
-			line,
-			game.currentPlayer.selectedSquares
-		);
-	}
-
-	for (let c = 0; c < 3; c++) {
-		if (validCombination) break;
-
-		validCombination = verifyCombinationVertical(
-			game.matrix,
-			game.currentPlayer.selectedSquares,
-			c
-		);
-	}
-
-	return validCombination;
-}
-
-function verifyCombinationHorizontal(line, playerSelectedSquares) {
-	const column = 0;
-
-	return (
-		playerSelectedSquares.includes(line[column]) &&
-		playerSelectedSquares.includes(line[column + 1]) &&
-		playerSelectedSquares.includes(line[column + 2])
-	);
-}
-
-function verifyCombinationVertical(matrix, playerSelectedSquares, column) {
-	const line = 0;
-
-	return (
-		playerSelectedSquares.includes(matrix[line][column]) &&
-		playerSelectedSquares.includes(matrix[line + 1][column]) &&
-		playerSelectedSquares.includes(matrix[line + 2][column])
-	);
-}
-
-function verifyCombinationDiagonal(matrix, playerSelectedSquares) {
-	const middle = 1;
-
-	return (
-		(playerSelectedSquares.includes(matrix[middle - 1][middle - 1]) ||
-			playerSelectedSquares.includes(matrix[middle - 1][middle + 1])) &&
-		playerSelectedSquares.includes(matrix[middle][middle]) &&
-		(playerSelectedSquares.includes(matrix[middle + 1][middle - 1]) ||
-			playerSelectedSquares.includes(matrix[middle + 1][middle + 1]))
-	);
+	game.reset(playerX);
+	playerX.reset(resetScore);
+	playerO.reset(resetScore);
 }
 
 game.init();
